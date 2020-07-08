@@ -46,7 +46,7 @@ function App() {
 
 
   let [liquidationPrice, setPrice] = useState(0);
-  let [userID, setUserId] = useState(0);
+  let [userID, setUserId] = useState('0x14f92271f8B8B531Fc3C544B81f480c8aFd5fD58');
 
 
   const calculateLiquidationPrice = () => {
@@ -61,25 +61,30 @@ function App() {
         getExchangeRate(cDAI),
         getMarket(cETH)
       ]).then(values=>{ let [ballance, debt, ethExchangeRate, daiExchangeRate, {collateralFactorMantissa} ] = values; 
-        console.log([ballance, debt, ethExchangeRate, daiExchangeRate, collateralFactorMantissa]);
-        ballance = new BigNumber(ballance+'e+8');
-        debt = new BigNumber(debt);
-        ethExchangeRate = new BigNumber(ethExchangeRate+'e+18');
-        daiExchangeRate = new BigNumber(daiExchangeRate+'e+18');
-        collateralFactorMantissa = new BigNumber(collateralFactorMantissa+'e+18');
+        //console.log([ballance, debt, ethExchangeRate, daiExchangeRate, collateralFactorMantissa]);
+        ballance = new BigNumber(ballance+'e-8');
+        console.log('user balance',ballance.toFixed());
+        debt = new BigNumber(debt+'e-18');
+        console.log('user debt',debt.toFixed());
+        ethExchangeRate = new BigNumber(ethExchangeRate+'e-18');
+        console.log('eth exchange rate',ethExchangeRate.toFixed());
+        daiExchangeRate = new BigNumber(daiExchangeRate+'e-18');
+        console.log('dai exchange rate',daiExchangeRate.toFixed());
+        collateralFactorMantissa = new BigNumber(collateralFactorMantissa+'e-18');
+        console.log('collateral factor',collateralFactorMantissa.toFixed());
 
         //calculating collateral
         let user_collateral = ballance.multipliedBy(ethExchangeRate).multipliedBy(collateralFactorMantissa);
-
+        console.log('user collateral', user_collateral.toFixed());
         //calculating debt
         let user_debt = debt.multipliedBy(daiExchangeRate);
 
         //calculating liquidation price
-        let liquidation_price = user_collateral.minus(user_debt);
+        let liquidation_price = user_debt.minus(user_collateral);
   
-        console.log(liquidation_price+'');
+        console.log(liquidation_price.toFixed());
   
-        setPrice(liquidation_price+'');
+        setPrice(liquidation_price.toFixed());
       });
 
 
